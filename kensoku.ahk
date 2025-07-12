@@ -6,34 +6,36 @@ SetMouseDelay, -1
 SetKeyDelay, -1
 
 ; Configuration
-global MOUSE_MODE := "NORMAL" ; "NORMAL", "INSERT", or "OFF"
+global MOUSE_MODE := "NORMAL"       ; "NORMAL", "INSERT", or "OFF"
 global FAST_MODE := False
-global ACCELERATION := 3.275    ; Base acceleration force
-global FRICTION := 0.8      ; Velocity decay per tick
-global MAX_VELOCITY := 50     ; Cap on velocity to prevent overshooting
-global SENSITIVITY := 0.8    ; Mouse movement sensitivity
-global TICK_RATE := 8         ; Timer interval in ms (125 Hz)
+global ACCELERATION := 3.275        ; Base acceleration force
+global FRICTION := 0.8              ; Velocity decay per tick
+global MAX_VELOCITY := 50           ; Cap on velocity to prevent overshooting
+global SENSITIVITY := 0.8           ; Mouse movement sensitivity
+global TICK_RATE := 10              ; Timer interval in ms (125 Hz)
 
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
 
 ; Initialize
+DllCall("SetThreadDpiAwarenessContext", "ptr", -3)
 SwitchMode(True)
 
 Accelerate(velocity, pos, neg) {
     input := pos + neg
     if (input == 0) {
-        ; Apply friction when no input
-        return velocity * 0.4
+        return velocity * FRICTION  ; Apply consistent friction
     }
-    ; Calculate new velocity with acceleration
     new_velocity := velocity * FRICTION + ACCELERATION * input * SENSITIVITY
-    ; Clamp velocity to prevent runaway
     return Clamp(new_velocity, -MAX_VELOCITY, MAX_VELOCITY)
 }
 
 Clamp(value, min_val, max_val) {
     return Min(Max(value, min_val), max_val)
+}
+
+SnapToZero(value, threshold := 0.5) {
+    return (Abs(value) < threshold) ? 0 : value
 }
 
 MoveCursor() {
@@ -44,24 +46,18 @@ MoveCursor() {
         return
     }
 
-    ; Read input states
     left := GetKeyState("a", "P") ? -1 : 0
     right := GetKeyState("d", "P") ? 1 : 0
     up := GetKeyState("w", "P") ? -1 : 0
     down := GetKeyState("s", "P") ? 1 : 0
 
-    ; Update velocities
-    VELOCITY_X := Accelerate(VELOCITY_X, left, right)
-    VELOCITY_Y := Accelerate(VELOCITY_Y, up, down)
+    VELOCITY_X := SnapToZero(Accelerate(VELOCITY_X, left, right))
+    VELOCITY_Y := SnapToZero(Accelerate(VELOCITY_Y, up, down))
 
-    ; Apply DPI awareness for consistent movement across monitors
-    DllCall("SetThreadDpiAwarenessContext", "ptr", -3)
-
-    ; Move mouse with rounded velocities for smoother motion
-    MouseMove, % Round(VELOCITY_X), % Round(VELOCITY_Y), 0, R
+    if (VELOCITY_X != 0 || VELOCITY_Y != 0)
+        MouseMove, % Round(VELOCITY_X), % Round(VELOCITY_Y), 0, R
 }
 
-; Switch between modes
 SwitchMode(init:=False, normal:=False) {
     if (init || normal) {
         MOUSE_MODE := "NORMAL"
@@ -72,15 +68,13 @@ SwitchMode(init:=False, normal:=False) {
     }
 }
 
-; Toggle fast mode
 EnableFast(fast:=False) {
     FAST_MODE := fast
-    ACCELERATION := fast ? 3.0 : 1.0
+    ACCELERATION := fast ? 3.275 : 3.0
     FRICTION := fast ? 0.8 : 0.4
     SENSITIVITY := fast ? 0.8 : 0.4
 }
 
-; Mouse actions
 Drag() {
     Click, Down
 }
@@ -115,14 +109,12 @@ MouseCtrlClick() {
     Send {Ctrl Up}
 }
 
-; Monitor edge detection
 MonitorLeftEdge() {
     CoordMode, Mouse, Screen
     MouseGetPos, mx
     return (mx // A_ScreenWidth) * A_ScreenWidth
 }
 
-; Jump to screen edges
 JumpLeftEdge() {
     CoordMode, Mouse, Screen
     MouseGetPos,, y
@@ -149,7 +141,6 @@ JumpRightEdge() {
     MouseMove, %x%, %y%, 0
 }
 
-; Scroll actions
 ScrollUp() {
     Click, WheelUp
 }
@@ -167,10 +158,10 @@ ScrollLeft() {
 }
 
 ; Hotkeys
-+!k:: SwitchMode(False, True)  ; Normal mode
-+!l:: SwitchMode(False, False) ; Insert mode
-+!o:: EnableFast(True)         ; Fast mode on
-+!p:: EnableFast(False)        ; Fast mode off
++!k:: SwitchMode(False, True)   ; Normal mode
++!l:: SwitchMode(False, False)  ; Insert mode
++!o:: EnableFast(True)          ; Fast mode on
++!p:: EnableFast(False)         ; Fast mode off
 
 #If (MOUSE_MODE == "NORMAL")
 w:: Return
