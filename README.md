@@ -1,56 +1,79 @@
 # Kensoku (鍵速)
 
-Easily control your mouse using keyboard. Written in AutoHotKey.
+Control your mouse using your keyboard. Written in AutoHotkey.
 
 ## Installation
 
-Click [Here](https://github.com/reinacchi/kensoku/releases/latest/download/kensoku.exe) to install the latest version or [explore](https://github.com/reinacchi/kensoku/releases/latest) any versions.
+Click [here](https://github.com/reinacchi/kensoku/releases/latest/download/kensoku.exe) to download the latest version, or [browse releases](https://github.com/reinacchi/kensoku/releases/latest).
 
-# How to Use
+---
 
-There are two modes available which each mode will represents a different control. See below for more:
+## How to Use
+
+Kensoku has two modes, each serving a different purpose:
+
+### Mode
+
+- `Shift + Alt + K` → Switch to **Cursor Mode**
+  Control the mouse cursor using your keyboard.
+
+- `Shift + Alt + L` → Switch to **Typing Mode**
+  Use your keyboard normally.
+
+### Pacing
+
+- `Shift + Alt + O` → **Normal Pace**
+  Default cursor speed (balanced movement).
+
+- `Shift + Alt + P` → **Precise Pace**
+  Slower, more controlled movement for accuracy.
+
+---
 
 ## Controls
 
-## Mode
+### Cursor Movement
 
-- `Shift+Alt+K` - Switch mode to **Control Mode**. This allows you to control the cursor with your keyboard.
-- `Shift+Alt+L` - Switch mode to **Regular Mode**. This allows you to type reguarly with your keyboard.
-- `Shift+Alt+O` - Allows your cursor to move at its default speed.
-- `Shift+Alt+P` - Allows your cursor to move in a slower speed for precision.
+- `W` → Move cursor up
+- `A` → Move cursor left
+- `S` → Move cursor down
+- `D` → Move cursor right
 
-### Cursor
+### Scrolling
 
-- `W` - Move the cursor up
-- `A` - Move the cursor to the left
-- `S` - Move the cursor down
-- `D` - Move the cursor to the right
-
-### Scroll
-
-- `I` - Scroll up
-- `J` - Scroll to the left
-- `K` - Scroll down
-- `L` - Scroll to the right
-- `R` - Scroll click
+- `I` → Scroll up
+- `J` → Scroll left
+- `K` → Scroll down
+- `L` → Scroll right
 
 ### Clicks
 
-- `E` - Left click
-- `Q` - Right click
-- `N` - Left drag
-- `M` - Right drag
+- `E` → Left click
+- `Q` → Right click
+- `R` → Middle click
+- `N` → Left drag (hold)
+- `M` → Right drag (hold)
 
 ### Misc
 
-- `B` - Release any click. If you are dragging or selecting a text, use this key to release them.
-- `Shift+W` - Move the cursor top of the screen
-- `Shift+A` - Move the cursor left side of the screen
-- `Shift+S` - Move the cursor bottom of the screen
-- `Shift+D` - Move the cursor right side of the screen
-- `Shift+Y` - Yank the mouse
+- `B` → Release mouse button (end drag/select)
 
-- **Custom hotkeys are not supported in the meantime.**
+- `Shift + W` → Jump to top edge of screen
+- `Shift + A` → Jump to left edge of screen
+- `Shift + S` → Jump to bottom edge of screen
+- `Shift + D` → Jump to right edge of screen
+
+- `Shift + Y` → Yank cursor to window corner (quick reposition)
+
+---
+
+## Notes
+
+- Cursor movement includes acceleration and smoothing for natural control.
+- Precise mode is designed for fine positioning (e.g. UI elements, text selection).
+- Custom hotkeys are not supported yet.
+
+---
 
 ## Contributing
 
